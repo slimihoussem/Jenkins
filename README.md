@@ -1,12 +1,29 @@
-# Python CI Demo
+# 🐍 Python CI Demo
 
-This is a simple Python application to demonstrate CI/CD with Jenkins.
+A simple Python project used to demonstrate **CI/CD with Jenkins** on Windows.
 
-## Features
-- Simple math functions: add, multiply
-- Check if a number is even
-- Unit tests with pytest
+This repository is part of a learning setup that shows how to:
+- Build a Python project
+- Run automated tests with pytest
+- Generate test reports
+- Trigger builds automatically using GitHub webhooks
 
-## Run Locally
-```bash
-python app.py
+---
+
+## 📌 Features
+
+- Simple math functions:
+  - `add(a, b)`
+  - `multiply(a, b)`
+- Utility function:
+  - `is_even(n)`
+- Unit tests using **pytest**
+- Jenkins pipeline with:
+  - Dependency installation
+  - Automated test execution
+  - Test report publishing
+
+---
+
+## 📂 Project Structure
+
