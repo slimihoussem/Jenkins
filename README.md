@@ -22,8 +22,6 @@ This repository shows how to build, test, and report results for a Python projec
   - Trigger Jenkins builds on push or PR
   - Example of CI workflow for Python projects
 
----
-
 ## 🐳 Docker Integration
 
 The Jenkins pipeline builds a Docker image `python-ci-demo` from this project, mounts the workspace inside the container, and executes tests:
