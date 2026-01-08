@@ -15,20 +15,28 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                // Build the Docker image with Python + dependencies
+                echo "🛠 Building Docker image..."
                 bat "docker build -t %IMAGE_NAME% ."
             }
         }
 
         stage('Run Tests') {
             steps {
-                // Run tests inside Docker container
-                bat "docker run --rm -v %WORKSPACE%:/app %IMAGE_NAME% pytest --junitxml=/app/results.xml"
+                echo "🧪 Running tests inside Docker..."
+                // Mount Jenkins workspace to /app inside container
+                bat """
+                docker run --rm -v %WORKSPACE%:/app %IMAGE_NAME% \
+                pytest --junitxml=/app/results.xml --tb=short -v > /app/test.log 2>&1
+                """
             }
             post {
                 always {
-                    // Publish test reports in Jenkins
+                    echo "📄 Publishing test results and logs..."
+                    // Publish JUnit XML results
                     junit 'results.xml'
+
+                    // Archive full test log for review
+                    archiveArtifacts artifacts: 'test.log', allowEmptyArchive: true
                 }
             }
         }
@@ -48,7 +56,7 @@ pipeline {
             echo "❌ Pipeline failed — check logs"
         }
         always {
-            echo "🧹 Cleaning up Docker image"
+            echo "🧹 Cleaning up Docker image..."
             bat "docker image rm -f %IMAGE_NAME% || exit 0"
         }
     }
