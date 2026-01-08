@@ -23,9 +23,9 @@ pipeline {
         stage('Run Tests') {
             steps {
                 echo "🧪 Running tests inside Docker..."
-                // Use double quotes for Windows paths and map %WORKSPACE% to /app in container
+                // Use Linux-style path for Windows Docker
                 bat """
-                docker run --rm -v "%WORKSPACE%:/app" %IMAGE_NAME% \
+                docker run --rm -v /c/ProgramData/Jenkins/.jenkins/workspace/jenkins_project_with_github:/app %IMAGE_NAME% ^
                 pytest --junitxml=/app/results.xml --tb=short -v > /app/test.log 2>&1
                 """
             }
