@@ -16,8 +16,13 @@ pipeline {
         stage('Run tests') {
             steps {
                 bat """
-                C:\\Users\\Houssem\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pytest
+                C:\\Users\\Houssem\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pytest --junitxml=results.xml
                 """
+            }
+            post {
+                always {
+                    junit 'results.xml'
+                }
             }
         }
 
@@ -32,13 +37,11 @@ pipeline {
         success {
             echo "✅ Pipeline completed successfully"
         }
-
         failure {
             echo "❌ Pipeline failed — check logs"
         }
-
         always {
-            echo "🧹 Pipeline finished (cleanup can go here)"
+            echo "🧹 Pipeline finished"
         }
     }
 }
