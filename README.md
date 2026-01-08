@@ -26,4 +26,9 @@ This repository is part of a learning setup that shows how to:
 ---
 
 ## 📂 Project Structure
+├── app.py
+├── test_app.py
+├── requirements.txt
+├── Jenkinsfile
+└── README.md
 
