@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "python-ci-demo "
+        IMAGE_NAME = "python-ci-demo"
         CONTAINER_NAME = "python_ci_run"
         WORKSPACE_DIR = "${env.WORKSPACE}"
     }
