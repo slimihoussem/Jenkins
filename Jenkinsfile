@@ -11,7 +11,7 @@ pipeline {
 
         stage('Install dependencies') {
             steps {
-                sh '''
+                bat '''
                 python --version
                 pip install --upgrade pip
                 pip install -r requirements.txt
@@ -21,7 +21,7 @@ pipeline {
 
         stage('Run tests') {
             steps {
-                sh '''
+                bat '''
                 pytest
                 '''
             }
