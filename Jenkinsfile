@@ -23,19 +23,16 @@ pipeline {
         stage('Run Tests') {
             steps {
                 echo "🧪 Running tests inside Docker..."
-                // Mount Jenkins workspace to /app inside container
+                // Use double quotes for Windows paths and map %WORKSPACE% to /app in container
                 bat """
-                docker run --rm -v %WORKSPACE%:/app %IMAGE_NAME% \
+                docker run --rm -v "%WORKSPACE%:/app" %IMAGE_NAME% \
                 pytest --junitxml=/app/results.xml --tb=short -v > /app/test.log 2>&1
                 """
             }
             post {
                 always {
                     echo "📄 Publishing test results and logs..."
-                    // Publish JUnit XML results
                     junit 'results.xml'
-
-                    // Archive full test log for review
                     archiveArtifacts artifacts: 'test.log', allowEmptyArchive: true
                 }
             }
