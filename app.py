@@ -1,15 +1,15 @@
 # app.py
 
 def add(a, b):
-    """Return the sum of two numbers."""
+    """Return the sum of two numbers"""
     return a + b
 
 def multiply(a, b):
-    """Return the product of two numbers."""
+    """Return the product of two numbers"""
     return a * b
 
 def is_even(n):
-    """Check if a number is even."""
+    """Check if a number is even"""
     return n % 2 == 0
 
 if __name__ == "__main__":
