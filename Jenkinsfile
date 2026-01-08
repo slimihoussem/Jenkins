@@ -1,26 +1,33 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "python-ci-demo"
+    }
+
     stages {
 
-        stage('Install dependencies') {
+        stage('Checkout') {
             steps {
-                bat """
-                C:\\Users\\Houssem\\AppData\\Local\\Programs\\Python\\Python313\\python.exe --version
-                C:\\Users\\Houssem\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pip install --upgrade pip
-                C:\\Users\\Houssem\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pip install -r requirements.txt
-                """
+                checkout scm
             }
         }
 
-        stage('Run tests') {
+        stage('Build Docker Image') {
             steps {
-                bat """
-                C:\\Users\\Houssem\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pytest --junitxml=results.xml
-                """
+                // Build the Docker image with Python + dependencies
+                bat "docker build -t %IMAGE_NAME% ."
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                // Run tests inside Docker container
+                bat "docker run --rm -v %WORKSPACE%:/app %IMAGE_NAME% pytest --junitxml=/app/results.xml"
             }
             post {
                 always {
+                    // Publish test reports in Jenkins
                     junit 'results.xml'
                 }
             }
@@ -41,7 +48,8 @@ pipeline {
             echo "❌ Pipeline failed — check logs"
         }
         always {
-            echo "🧹 Pipeline finished"
+            echo "🧹 Cleaning up Docker image"
+            bat "docker image rm -f %IMAGE_NAME% || exit 0"
         }
     }
 }
