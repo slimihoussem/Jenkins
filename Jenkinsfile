@@ -13,8 +13,8 @@ pipeline {
             steps {
                 bat '''
                 python --version
-                pip install --upgrade pip
-                pip install -r requirements.txt
+                python -m pip install --upgrade pip
+                python -m pip install -r requirements.txt
                 '''
             }
         }
@@ -22,7 +22,7 @@ pipeline {
         stage('Run tests') {
             steps {
                 bat '''
-                pytest
+                python -m pytest
                 '''
             }
         }
