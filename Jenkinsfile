@@ -19,7 +19,7 @@ pipeline {
             steps {
                 echo "🛠 Building Docker image..."
                 bat """
-                docker build -t %IMAGE_NAME% %WORKSPACE_DIR%
+                docker build -t %IMAGE_NAME% "%WORKSPACE_DIR%"
                 """
             }
         }
@@ -27,15 +27,14 @@ pipeline {
         stage('Run Tests in Docker') {
             steps {
                 echo "🧪 Running tests inside Docker..."
-                // Run container detached (-d) so we can inspect it later
                 bat """
-                docker run -d --name %CONTAINER_NAME% -v "%WORKSPACE_DIR%:/app" %IMAGE_NAME% ^
-                pytest --junitxml=/app/results.xml --tb=short -v > /app/test.log 2>&1
+                docker run -d --name %CONTAINER_NAME% -v "%WORKSPACE_DIR%:/app" %IMAGE_NAME% /bin/sh -c "pytest --junitxml=/app/results.xml --tb=short -v > /app/test.log 2>&1"
                 """
             }
             post {
                 always {
                     echo "📄 Publishing test results and logs..."
+                    // Jenkins will fail if results.xml not found; use allowEmptyArchive
                     junit 'results.xml'
                     archiveArtifacts artifacts: 'test.log', allowEmptyArchive: true
                 }
