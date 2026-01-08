@@ -11,19 +11,19 @@ pipeline {
 
         stage('Install dependencies') {
             steps {
-                bat '''
-                python --version
-                python -m pip install --upgrade pip
-                python -m pip install -r requirements.txt
-                '''
+                bat """
+                C:\\Users\\Houssem\\AppData\\Local\\Programs\\Python\\Python313\\python.exe --version
+                C:\\Users\\Houssem\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pip install --upgrade pip
+                C:\\Users\\Houssem\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pip install -r requirements.txt
+                """
             }
         }
 
         stage('Run tests') {
             steps {
-                bat '''
-                python -m pytest
-                '''
+                bat """
+                C:\\Users\\Houssem\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pytest
+                """
             }
         }
 
