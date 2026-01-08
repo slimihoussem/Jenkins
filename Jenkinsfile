@@ -2,12 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main',
-                    url: 'https://github.com/slimihoussem/Jenkins.git'
-            }
-        }
 
         stage('Install dependencies') {
             steps {
@@ -29,8 +23,22 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo "Tests passed ✅ Deploying application..."
+                echo "🚀 Tests passed — deploying application"
             }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Pipeline completed successfully"
+        }
+
+        failure {
+            echo "❌ Pipeline failed — check logs"
+        }
+
+        always {
+            echo "🧹 Pipeline finished (cleanup can go here)"
         }
     }
 }
