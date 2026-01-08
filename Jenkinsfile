@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "python-ci-demo"
+        CONTAINER_NAME = "python_ci_run_${env.BUILD_NUMBER}" // unique container name per build
     }
 
     stages {
@@ -16,17 +17,18 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo "🛠 Building Docker image..."
-                bat "docker build -t %IMAGE_NAME% ."
+                bat """
+                docker build -t %IMAGE_NAME% .
+                """
             }
         }
 
-        stage('Run Tests') {
+        stage('Run Tests in Docker') {
             steps {
                 echo "🧪 Running tests inside Docker..."
-                // Use Linux-style path for Windows Docker
                 bat """
-                docker run --rm -v /c/ProgramData/Jenkins/.jenkins/workspace/jenkins_project_with_github:/app %IMAGE_NAME% ^
-                pytest --junitxml=/app/results.xml --tb=short -v > /app/test.log 2>&1
+                docker run -d --name %CONTAINER_NAME% -v "%CD%:/app" %IMAGE_NAME% ^
+                cmd /c "pytest --junitxml=/app/results.xml --tb=short -v > /app/test.log 2>&1"
                 """
             }
             post {
@@ -40,7 +42,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo "🚀 Tests passed — deploying application"
+                echo "🚀 Tests passed — deploy step can go here"
             }
         }
     }
@@ -53,8 +55,7 @@ pipeline {
             echo "❌ Pipeline failed — check logs"
         }
         always {
-            echo "🧹 Cleaning up Docker image..."
-            bat "docker image rm -f %IMAGE_NAME% || exit 0"
+            echo "🧹 Pipeline finished. Container %CONTAINER_NAME% is kept for inspection."
         }
     }
 }
